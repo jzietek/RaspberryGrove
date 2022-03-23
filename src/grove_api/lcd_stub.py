@@ -1,6 +1,6 @@
 # Grove - 16x2 LCD(White on Blue) connected to I2C port
 
-from grove.display.jhd1802 import JHD1802
+#from grove.display.jhd1802 import JHD1802
 
 current_lcd_text = ""
 current_cursor_row = 0
@@ -17,11 +17,10 @@ def set_displayed_text(row, column, text):
     current_lcd_text = text
     current_cursor_column = column
     current_cursor_row = row
-    
-    lcd = JHD1802()    
-    lcd.setCursor(row, column)
-    lcd.write(text)    
-    print("Set LCD display text to {} on row {} and column {}".format(text, row, column))
+    #lcd = JHD1802()    
+    #lcd.setCursor(row, column)
+    #lcd.write(text)    
+    print("Set display text to {} on row {} and column {}".format(text, row, column))
     return
 
 def clear_displayed_text():
@@ -31,7 +30,7 @@ def clear_displayed_text():
     current_lcd_text = ""
     current_cursor_column = 0
     current_cursor_row = 0
-    lcd = JHD1802()
-    lcd.clear()        
-    print("Cleared LCD display text and cursor position")
+    #lcd = JHD1802();
+    #lcd.clear()        
+    print("Cleared display text and cursor position")
     return
