@@ -31,10 +31,13 @@ def delete_lcd_text():
 #----------------------------------
 
 @app.put("/relay/<int:digitalPortId>")
-def relay_on(digitalPortId):
+def relay_toggle(digitalPortId):
     isEnabled=request.args.get("enabled")
-    if (isEnabled):
+    print("isEnabled == {}".format(isEnabled))
+    if isEnabled == "True":
+        print("enabling")
         relay.switchOn(digitalPortId)
     else:
+        print("disabling")
         relay.switchOff(digitalPortId)
-    return
+    return "enabled={}".format(isEnabled)
