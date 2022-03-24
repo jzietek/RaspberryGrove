@@ -2,7 +2,7 @@
 from cgitb import text
 import re
 from flask import Flask, request, jsonify
-from grove_api import lcd
+from grove_api import lcd, relay
 
 app = Flask(__name__)
 
@@ -27,3 +27,14 @@ def update_lcd_text():
 def delete_lcd_text():
     lcd.clear_displayed_text()
     return "LCD content cleared"
+
+#----------------------------------
+
+@app.put("/relay/<int:digitalPortId>")
+def relay_on(digitalPortId):
+    isEnabled=request.args.get("enabled")
+    if (isEnabled):
+        relay.switchOn(digitalPortId)
+    else:
+        relay.switchOff(digitalPortId)
+    return
