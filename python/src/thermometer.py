@@ -5,9 +5,7 @@ from value_changed_event import ValueChangedEvent
 class Thermometer(object):
     def __init__(self):
         self.OnTemperatureChanged = ValueChangedEvent("°C")
-        self.OnHumidityChanged = ValueChangedEvent("%")
-        self.lastKnwonTemperature = 0
-        self.lastKnownHumidity = 0
+        self.lastKnownTemperature = 0
     
     def AddSubscribersForTemperatureChangedEvent(self,objMethod):
         self.OnTemperatureChanged += objMethod
@@ -15,36 +13,21 @@ class Thermometer(object):
     def RemoveSubscribersForTemperatureChangedEvent(self,objMethod):
         self.OnTemperatureChanged -= objMethod
 
-    def AddSubscribersForHumidityChangedEvent(self,objMethod):
-        self.OnHumidityChanged += objMethod
-         
-    def RemoveSubscribersForHumidityChangedEvent(self,objMethod):
-        self.OnHumidityChanged -= objMethod
-
     def TemperatureChanged(self, newTemperature):
-        previousTemperature = self.lastKnwonTemperature
-        self.lastKnwonTemperature = newTemperature
+        previousTemperature = self.lastKnownTemperature
+        self.lastKnownTemperature = newTemperature
         delta = newTemperature - previousTemperature
         self.OnTemperatureChanged(previousTemperature, newTemperature, delta, self.OnTemperatureChanged.measurementUnit)
-
-    def HumidityChanged(self, newHumidity):
-        previousHumidity = self.lastKnownHumidity
-        self.lastKnownHumidity = newHumidity
-        delta = newHumidity - previousHumidity
-        self.OnTemperatureChanged(previousHumidity, newHumidity, delta, self.OnHumidityChanged.measurementUnit)
 
     def RunLoop(self):
         sensor = DhtSensor()
         while (True):
             (temperature, humidity) = sensor.ReadTemperatureAndHumidity()
 
-            if (temperature != self.lastKnwonTemperature):
+            if (temperature != self.lastKnownTemperature):
                 self.TemperatureChanged(temperature)
             
-            if (humidity != self.lastKnwonTemperature):
-                self.HumidityChanged(humidity)
-            
-            time.sleep(30)
+            time.sleep(3)
 
 
 class TemperatureChangePrinter(object):
@@ -54,23 +37,17 @@ class TemperatureChangePrinter(object):
     def PrintTemperatureChange(self, previousTemperature, currentTemperature, delta, unit):
         print(f'Temperatue has changed from {previousTemperature} to {currentTemperature} {unit}')
 
-    def PrintHumidityChange(self, previousHumidity, currentHumidity, delta, unit):
-        print(f'Humidity has changed from {previousHumidity} to {currentHumidity} {unit}')
-
-
 def Run():
     temperatureObserver = TemperatureChangePrinter()
     #temperatureRestCaller = ToDo()
     thermometer = Thermometer()
     thermometer.AddSubscribersForTemperatureChangedEvent(temperatureObserver.PrintTemperatureChange)
-    thermometer.AddSubscribersForHumidityChangedEvent(temperatureObserver.PrintHumidityChange)
     #thermometer.AddSubscribersForTemperatureChangedEvent(temperatureRestCaller.DoRestCall)
 
     try:
         thermometer.RunLoop()
     finally:
         thermometer.RemoveSubscribersForTemperatureChangedEvent(temperatureObserver.PrintTemperatureChange)
-        thermometer.RemoveSubscribersForHumidityChangedEvent(temperatureObserver.PrintHumidityChange)
 
 if __name__ == "__main__":
     Run()
