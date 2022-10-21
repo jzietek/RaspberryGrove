@@ -17,6 +17,6 @@ class DhtSensor(object):
             sensor = DHT('11', 5)
             humi, temp = sensor.read()
         else:
-            temp = random.randint(1, 2)
-            humi = 50
+            temp = random.randint(10, 20)
+            humi = random.randint(40, 60)
         return (temp, humi)
