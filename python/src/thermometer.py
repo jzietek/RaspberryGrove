@@ -4,35 +4,6 @@ import requests
 from grove_api.dht_sensor import DhtSensor
 from value_changed_event import ValueChangedEvent
 
-class Thermometer(object):
-    def __init__(self, interval, tolerance):
-        self.OnTemperatureChanged = ValueChangedEvent("°C")
-        self.lastKnownTemperature = 0
-        self.interval = interval
-        self.tolerance = tolerance
-    
-    def AddSubscribersForTemperatureChangedEvent(self,objMethod):
-        self.OnTemperatureChanged += objMethod
-         
-    def RemoveSubscribersForTemperatureChangedEvent(self,objMethod):
-        self.OnTemperatureChanged -= objMethod
-
-    def TemperatureChanged(self, newTemperature):
-        previousTemperature = self.lastKnownTemperature
-        self.lastKnownTemperature = newTemperature
-        delta = newTemperature - previousTemperature
-        self.OnTemperatureChanged(previousTemperature, newTemperature, delta, self.OnTemperatureChanged.measurementUnit)
-
-    def RunLoop(self):
-        sensor = DhtSensor()
-        while (True):
-            (temperature, humidity) = sensor.ReadTemperatureAndHumidity()
-
-            if (abs(temperature - self.lastKnownTemperature) > self.tolerance):
-                self.TemperatureChanged(temperature)
-            
-            time.sleep(self.interval)
-
 class TemperatureChangeDomoticzNotifier(object):
     def __init__(self, domoticzHost, idx):
         self.domoticzHost = domoticzHost
@@ -45,26 +16,67 @@ class TemperatureChangeDomoticzNotifier(object):
         print(response.text)
 
 
-class TemperatureChangePrinter(object):
+class CyclicSensorWatcher(object):
+    def __init__(self, sensor, interval, deltaTolerance, unit):
+        self.sensor = sensor
+        self.interval = interval
+        self.tolerance = deltaTolerance
+        self.unit = unit
+        self.lastKnownValue = 0
+        self.OnMeasurementChanged = ValueChangedEvent(self.unit)
+        pass
+
+    def AddSubscribersForMeasurementChangedEvent(self,objMethod):
+        self.OnMeasurementChanged += objMethod
+         
+    def RemoveSubscribersForMeasurementChangedEvent(self,objMethod):
+        self.OnMeasurementChanged -= objMethod
+
+    def MeasurementChanged(self, measuredValue):
+        previousValue = self.lastKnownValue
+        self.lastKnownValue = measuredValue
+        delta = measuredValue - previousValue
+        self.OnMeasurementChanged(previousValue, measuredValue, delta, self.OnMeasurementChanged.measurementUnit)
+
+    def RunLoop(self):
+        sensor = DhtSensor(5)
+        while (True):
+            (temperature, humidity) = sensor.ReadTemperatureAndHumidity()
+            measuredValue = temperature
+
+            if (abs(measuredValue - self.lastKnownValue) > self.tolerance):
+                self.MeasurementChanged(measuredValue)
+            
+            time.sleep(self.interval)
+
+
+class MeasurementChangePrinter(object):
     def __init__(self):
         pass
 
-    def PrintTemperatureChange(self, previousTemperature, currentTemperature, delta, unit):
-        print(f'Temperatue has changed from {previousTemperature} to {currentTemperature} {unit}')
+    def PrintMeasurementChange(self, previousValue, currentValue, delta, unit):
+        print(f'Value has changed from {previousValue} to {currentValue} {unit}')
+
 
 def Run(args):
-    temperatureObserver = TemperatureChangePrinter()
+    sensor = DhtSensor(5)
+    #sensorWatcher = CyclicSensorWatcher(sensor.ReadTemperature, args.interval, args.deltaTolerance, "°C")
+    sensorWatcher = CyclicSensorWatcher(DhtSensor(5), args.interval, args.deltaTolerance, "°C")
     domoticzNotifier = TemperatureChangeDomoticzNotifier(args.domoticzHost, args.idx)
-    thermometer = Thermometer(args.interval, args.deltaTolerance)
-    thermometer.AddSubscribersForTemperatureChangedEvent(temperatureObserver.PrintTemperatureChange)
-    thermometer.AddSubscribersForTemperatureChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
+    measurementChangePrinter = MeasurementChangePrinter()
+
+    sensorWatcher.AddSubscribersForMeasurementChangedEvent(measurementChangePrinter.PrintMeasurementChange)
+    sensorWatcher.AddSubscribersForMeasurementChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
 
     try:
-        thermometer.RunLoop()
+        sensorWatcher.RunLoop()
     finally:
-        thermometer.RemoveSubscribersForTemperatureChangedEvent(temperatureObserver.PrintTemperatureChange)
-        thermometer.RemoveSubscribersForTemperatureChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
+        sensorWatcher.RemoveSubscribersForMeasurementChangedEvent(measurementChangePrinter.PrintMeasurementChange)
+        sensorWatcher.RemoveSubscribersForMeasurementChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
 
+    
+
+#python3 thermometer.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 104
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Temperature measurement handling.")
     parser.add_argument('domoticzHost', default="http://192.168.0.188:8080", help='Location of the Domoticz server. <IP/Hostname>:<PORT>')
@@ -75,6 +87,3 @@ if __name__ == "__main__":
 
     args = parser.parse_args()    
     Run(args)
-
-#python3 thermometer.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 104
-
