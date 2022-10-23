@@ -2,31 +2,31 @@ import time
 from value_changed_event import ValueChangedEvent
 
 class CyclicSensorWatcher(object):
-    def __init__(self, objMethod, interval, deltaTolerance, unit):
-        self.objMethod = objMethod
-        self.interval = interval
-        self.tolerance = deltaTolerance
-        self.unit = unit
-        self.lastKnownValue = 0
-        self.OnMeasurementChanged = ValueChangedEvent(self.unit)
+    def __init__(self, obj_method, interval, delta_tolerance, unit):
+        self.__obj_method = obj_method
+        self.__interval = interval
+        self.__tolerance = delta_tolerance
+        self.__unit = unit
+        self.__last_known_value = 0
+        self.on_sensor_event = ValueChangedEvent(self.__unit)
         pass
 
-    def AddSubscribersForMeasurementChangedEvent(self,objMethod):
-        self.OnMeasurementChanged += objMethod
+    def add_sensor_event_subscriber(self,obj_method):
+        self.on_sensor_event += obj_method
          
-    def RemoveSubscribersForMeasurementChangedEvent(self,objMethod):
-        self.OnMeasurementChanged -= objMethod
+    def remove_sensor_event_subscriber(self,obj_method):
+        self.on_sensor_event -= obj_method
 
-    def MeasurementChanged(self, measuredValue):
-        previousValue = self.lastKnownValue
-        self.lastKnownValue = measuredValue
-        delta = measuredValue - previousValue
-        self.OnMeasurementChanged(previousValue, measuredValue, delta, self.OnMeasurementChanged.measurementUnit)
+    def measurement_changed(self, measured_value):
+        previous_value = self.__last_known_value
+        self.__last_known_value = measured_value
+        delta = measured_value - previous_value
+        self.on_sensor_event(previous_value, measured_value, delta, self.on_sensor_event.measurementUnit)
 
-    def RunLoop(self):        
+    def run_loop(self):        
         while (True):
-            measuredValue = self.objMethod()
-            if (abs(measuredValue - self.lastKnownValue) > self.tolerance):
-                self.MeasurementChanged(measuredValue)
+            measured_value = self.__obj_method()
+            if (abs(measured_value - self.__last_known_value) > self.__tolerance):
+                self.measurement_changed(measured_value)
             
-            time.sleep(self.interval)
+            time.sleep(self.__interval)

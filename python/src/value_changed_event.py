@@ -1,7 +1,7 @@
 class ValueChangedEvent(object):
-    def __init__(self, measurementUnit):
+    def __init__(self, measurement_unit):
         self.__eventHandlers = []
-        self.measurementUnit = measurementUnit
+        self.measurementUnit = measurement_unit
     
     def __iadd__(self, handler):
         self.__eventHandlers.append(handler)
@@ -12,5 +12,5 @@ class ValueChangedEvent(object):
         return self
 
     def __call__(self, *args, **keywargs):
-        for eventHandlers in self.__eventHandlers:
-            eventHandlers(*args, **keywargs)
+        for event_handler in self.__eventHandlers:
+            event_handler(*args, **keywargs)

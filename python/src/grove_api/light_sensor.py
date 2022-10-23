@@ -4,21 +4,21 @@ import random
 
 try:
     from grove.grove_light_sensor_v1_2 import GroveLightSensor
-    groveAvailable = True
+    (grove_available) = True
 except ImportError:
     print("Grove not supported. Using mocked light sensor instead.")
-    groveAvailable = False
+    (grove_available) = False
 
 
 class LightSensor(object):
-    def __init__(self, analogPortNumber = 0):
-        if (groveAvailable):
-            self.sensor = GroveLightSensor(analogPortNumber)
+    def __init__(self, analog_port_number = 0):
+        if (grove_available):
+            self.__sensor = GroveLightSensor(analog_port_number)
         else:
-            self.sensor = None
+            self.__sensor = None
 
-    def ReadLightIntensity(self):
-        if (self.sensor is not None):
-            return self.sensor.light
+    def read_light_intensity(self):
+        if (self.__sensor is not None):
+            return self.__sensor.light
         else:
             return random.random()

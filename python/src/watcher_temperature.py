@@ -1,47 +1,27 @@
-import argparse
-import requests
+from domoticz_api_notifier import DomoticzApiNotifier
 from grove_api.dht_sensor import DhtSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
 from measurement_change_printer import MeasurementChangePrinter
+from watcher_args_parser import WatcherArgsParser
+from domoticz_api_notifier import DomoticzApiNotifier
 
-class TemperatureChangeDomoticzNotifier(object):
-    def __init__(self, domoticzHost, idx):
-        self.domoticzHost = domoticzHost
-        self.idx = idx        
-
-    def NotifyTemperatureChanged(self, previousTemperature, currentTemperature, delta, unit):
-        requestQuery = f'{self.domoticzHost}/json.htm?type=command&param=udevice&idx={self.idx}&nvalue=0&svalue={currentTemperature}'
-        print(requestQuery)
-        response = requests.post(requestQuery)
-        print(response.text)
-
-
-def Run(args):
+def run(args):
     sensor = DhtSensor(args.digitalPortUsed)
-    sensorWatcher = CyclicSensorWatcher(sensor.ReadTemperature, args.interval, args.deltaTolerance, "°C")    
-    domoticzNotifier = TemperatureChangeDomoticzNotifier(args.domoticzHost, args.idx)
-    measurementChangePrinter = MeasurementChangePrinter()
+    sensor_watcher = CyclicSensorWatcher(sensor.read_temperature, args.interval, args.deltaTolerance, "°C")    
+    domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
+    measurement_change_printer = MeasurementChangePrinter()
 
-    sensorWatcher.AddSubscribersForMeasurementChangedEvent(measurementChangePrinter.PrintMeasurementChange)
-    sensorWatcher.AddSubscribersForMeasurementChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
+    sensor_watcher.add_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
+    sensor_watcher.add_sensor_event_subscriber(domoticz_notifier.notify_temperature_changed)
 
     try:
-        sensorWatcher.RunLoop()
+        sensor_watcher.run_loop()
     finally:
-        sensorWatcher.RemoveSubscribersForMeasurementChangedEvent(measurementChangePrinter.PrintMeasurementChange)
-        sensorWatcher.RemoveSubscribersForMeasurementChangedEvent(domoticzNotifier.NotifyTemperatureChanged)
-
+        sensor_watcher.remove_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
+        sensor_watcher.remove_sensor_event_subscriber(domoticz_notifier.notify_temperature_changed)
     
 
-#python3 watcher_temperature.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 104
+#python3 watcher_temperature.py http://192.168.0.188:8080 --interval 30 --deltaTolerance 0.5 --idx 104 -d 5
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Temperature measurement handling.")
-    parser.add_argument('domoticzHost', default="http://192.168.0.188:8080", help='Location of the Domoticz server. <IP/Hostname>:<PORT>')
-
-    parser.add_argument('-i','--interval', type=int, default=30, help='Measurement interval time in seconds.')
-    parser.add_argument('-t', '--deltaTolerance', default=0.5, type=float, help='Measurement change is reported, if previous measurement differs by more than this delta tolerance value.')
-    parser.add_argument('-x', '--idx', type=int, default=104, help='Domoticz IDX number assigned to the related virtual device.')
-    parser.add_argument('-d', '--digitalPortUsed', type=int, default=5, help='Number of digital port on the device, where the sensor is pluged-in.')
-
-    args = parser.parse_args()    
-    Run(args)
+    parser = WatcherArgsParser("Temperature measurement watcher", idx=104, digital_port=5)   
+    run(parser.parse_args())
