@@ -4,7 +4,7 @@ try:
     from grove.grove_temperature_humidity_sensor import DHT
     grove_available = True
 except ImportError:
-    print("Grove not supported. Using mocked temperature sensor instead.")
+    print("Grove not supported. Using mocked temperature/humidity sensor instead.")
     grove_available = False
 
 class DhtSensor(object):

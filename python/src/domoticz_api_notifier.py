@@ -6,10 +6,13 @@ class DomoticzApiNotifier(object):
         self.__idx = idx
 
     def _post_value_changed(self, query):
-        requestQuery = f'{self.__domoticz_url}{query}'
-        print(requestQuery)
-        response = requests.post(requestQuery)
-        print(response.text)
+        try:
+            requestQuery = f'{self.__domoticz_url}{query}'
+            print(requestQuery)
+            response = requests.post(requestQuery)
+            print(response.text)
+        except:
+            print(f'Exception when sending POST request: {requestQuery}')
 
     def notify_temperature_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
@@ -27,5 +30,3 @@ class DomoticzApiNotifier(object):
 
     def notify_light_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
-        
-        
