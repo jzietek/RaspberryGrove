@@ -1,4 +1,5 @@
 import requests
+import logging
 
 class DomoticzApiNotifier(object):
     def __init__(self, domoticz_url, idx):
@@ -8,11 +9,11 @@ class DomoticzApiNotifier(object):
     def _post_value_changed(self, query):
         try:
             requestQuery = f'{self.__domoticz_url}{query}'
-            print(requestQuery)
+            logging.debug(requestQuery)
             response = requests.post(requestQuery)
-            print(response.text)
+            logging.debug(response.text)
         except:
-            print(f'Exception when sending POST request: {requestQuery}')
+            logging.error(f'Exception when sending POST request: {requestQuery}')
 
     def notify_temperature_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')

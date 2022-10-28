@@ -21,4 +21,4 @@ class LightSensor(object):
         if (self.__sensor is not None):
             return self.__sensor.light
         else:
-            return random.random()
+            return random.random() * 100

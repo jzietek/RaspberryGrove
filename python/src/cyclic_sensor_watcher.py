@@ -1,3 +1,4 @@
+import logging
 import time
 from value_changed_event import ValueChangedEvent
 
@@ -24,10 +25,10 @@ class CyclicSensorWatcher(object):
         self.on_sensor_event(previous_value, measured_value, delta, self.on_sensor_event.measurementUnit)
 
     def log_loop_started(self):
-        print("Starting loop")
-        print(f'Initial value: {self.__last_known_value} {self.__unit}')
-        print(f'Change tolerance: {self.__tolerance}')
-        print(f'Check interval: {self.__interval} seconds')
+        logging.info("Starting loop")
+        logging.info(f'Initial value: {self.__last_known_value} {self.__unit}')
+        logging.info(f'Change tolerance: {self.__tolerance}')
+        logging.info(f'Check interval: {self.__interval} seconds')
 
     def run_loop(self):
         self.log_loop_started()        

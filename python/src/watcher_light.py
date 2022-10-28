@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
+import logging
+import logging.config
 from grove_api.light_sensor import LightSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
 from measurement_change_printer import MeasurementChangePrinter
 from watcher_args_parser import WatcherArgsParser
 from domoticz_api_notifier import DomoticzApiNotifier
+
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger(__name__)
 
 def run(args):
     sensor = LightSensor(args.analogPortUsed)
