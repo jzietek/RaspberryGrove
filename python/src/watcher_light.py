@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from grove_api.light_sensor import LightSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
 from measurement_change_printer import MeasurementChangePrinter

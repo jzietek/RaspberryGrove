@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from domoticz_api_notifier import DomoticzApiNotifier
 from grove_api.dht_sensor import DhtSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
