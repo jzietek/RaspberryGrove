@@ -23,7 +23,14 @@ class CyclicSensorWatcher(object):
         delta = measured_value - previous_value
         self.on_sensor_event(previous_value, measured_value, delta, self.on_sensor_event.measurementUnit)
 
-    def run_loop(self):        
+    def log_loop_started(self):
+        print("Starting loop")
+        print(f'Initial value: {self.__last_known_value} {self.__unit}')
+        print(f'Change tolerance: {self.__tolerance}')
+        print(f'Check interval: {self.__interval} seconds')
+
+    def run_loop(self):
+        self.log_loop_started()        
         while (True):
             measured_value = self.__obj_method()
             if (abs(measured_value - self.__last_known_value) > self.__tolerance):
