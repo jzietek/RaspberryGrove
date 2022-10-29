@@ -1,0 +1,20 @@
+2022-10-29 08:59:50,618 - root - INFO - Logging initialized with logging.yaml
+2022-10-29 08:59:50,618 - root - WARNING - Grove not supported. Using mocked light sensor instead.
+2022-10-29 08:59:50,618 - root - INFO - Starting loop
+2022-10-29 08:59:50,618 - root - INFO - Initial value: 0 Lux
+2022-10-29 08:59:50,618 - root - INFO - Change tolerance: 5.0
+2022-10-29 08:59:50,618 - root - INFO - Check interval: 1 seconds
+2022-10-29 08:59:51,624 - root - INFO - Value has changed from 0 to 96.375933271607 Lux
+2022-10-29 08:59:52,757 - root - INFO - Value has changed from 96.375933271607 to 72.79950671321235 Lux
+2022-10-29 08:59:53,795 - root - INFO - Value has changed from 72.79950671321235 to 13.19474128889998 Lux
+2022-10-29 08:59:54,828 - root - INFO - Value has changed from 13.19474128889998 to 66.27210254847078 Lux
+2022-10-29 08:59:55,865 - root - INFO - Value has changed from 66.27210254847078 to 18.340011569664426 Lux
+2022-10-29 08:59:56,902 - root - INFO - Value has changed from 18.340011569664426 to 54.28833472357538 Lux
+2022-10-29 08:59:57,929 - root - INFO - Value has changed from 54.28833472357538 to 12.937932852339761 Lux
+2022-10-29 08:59:58,957 - root - INFO - Value has changed from 12.937932852339761 to 24.810332406616986 Lux
+2022-10-29 08:59:59,992 - root - INFO - Value has changed from 24.810332406616986 to 71.51350156707237 Lux
+2022-10-29 09:00:01,028 - root - INFO - Value has changed from 71.51350156707237 to 49.651913971859365 Lux
+2022-10-29 09:00:02,059 - root - INFO - Value has changed from 49.651913971859365 to 35.80909882330159 Lux
+2022-10-29 09:00:03,085 - root - INFO - Value has changed from 35.80909882330159 to 17.875405227702146 Lux
+2022-10-29 09:00:04,111 - root - INFO - Value has changed from 17.875405227702146 to 54.96099847402994 Lux
+2022-10-29 09:00:05,140 - root - INFO - Value has changed from 54.96099847402994 to 89.59070888579978 Lux
