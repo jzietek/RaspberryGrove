@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import logging_setup
 from grove_api.light_sensor import LightSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
@@ -8,8 +9,9 @@ from watcher_args_parser import WatcherArgsParser
 from domoticz_api_notifier import DomoticzApiNotifier
 
 def run(args):
+    watcher_name = os.path.basename(__file__)
     sensor = LightSensor(args.analogPortUsed)
-    sensor_watcher = CyclicSensorWatcher(sensor.read_light_intensity, args.interval, args.deltaTolerance, "Lux")    
+    sensor_watcher = CyclicSensorWatcher(sensor.read_light_intensity, args.interval, args.deltaTolerance, "Lux", watcher_name)    
     domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
     measurement_change_printer = MeasurementChangePrinter()
 
