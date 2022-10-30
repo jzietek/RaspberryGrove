@@ -33,3 +33,11 @@ class DomoticzApiNotifier(object):
 
     def notify_light_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
+
+    def notify_distance_changed(self, previous_value, current_value, delta, unit):
+        #self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}') #TODO
+        pass
+
+    def notify_motion_detection_changed(self, previous_value, current_value, delta, unit):
+        #self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}') #TODO
+        pass
