@@ -9,18 +9,11 @@ from domoticz_api_notifier import DomoticzApiNotifier
 
 def run(args):
     sensor = DhtSensor(args.digitalPortUsed)
-    sensor_watcher = CyclicSensorWatcher(sensor.read_humidity, args.interval, args.deltaTolerance, "%")    
     domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
     measurement_change_printer = MeasurementChangePrinter()
-
-    sensor_watcher.add_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-    sensor_watcher.add_sensor_event_subscriber(domoticz_notifier.notify_humidity_changed)
-
-    try:
-        sensor_watcher.run_loop()
-    finally:
-        sensor_watcher.remove_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-        sensor_watcher.remove_sensor_event_subscriber(domoticz_notifier.notify_humidity_changed)
+    handlers = [measurement_change_printer.print_measurement_change, domoticz_notifier.notify_humidity_changed]
+    sensor_watcher = CyclicSensorWatcher(sensor.read_humidity, handlers, args.interval, args.deltaTolerance, "%")    
+    sensor_watcher.run_loop()
 
 #python3 watcher_humidity.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 105
 if __name__ == "__main__":

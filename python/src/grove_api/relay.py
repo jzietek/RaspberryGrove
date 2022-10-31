@@ -7,7 +7,6 @@ def switchOn(digitalPortId):
     print("relay D{} on".format(digitalPortId))
     return
 
-
 def switchOff(digitalPortId):
     relay = GroveRelay(digitalPortId)
     relay.off()

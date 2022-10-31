@@ -9,19 +9,11 @@ from domoticz_api_notifier import DomoticzApiNotifier
 
 def run(args):
     sensor = DhtSensor(args.digitalPortUsed)
-    sensor_watcher = CyclicSensorWatcher(sensor.read_temperature, args.interval, args.deltaTolerance, "°C")    
     domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
     measurement_change_printer = MeasurementChangePrinter()
-
-    sensor_watcher.add_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-    sensor_watcher.add_sensor_event_subscriber(domoticz_notifier.notify_temperature_changed)
-
-    try:
-        sensor_watcher.run_loop()
-    finally:
-        sensor_watcher.remove_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-        sensor_watcher.remove_sensor_event_subscriber(domoticz_notifier.notify_temperature_changed)
-    
+    handlers = [measurement_change_printer.print_measurement_change, domoticz_notifier.notify_temperature_changed]
+    sensor_watcher = CyclicSensorWatcher(sensor.read_temperature, handlers, args.interval, args.deltaTolerance, "°C")
+    sensor_watcher.run_loop()
 
 #python3 watcher_temperature.py http://192.168.0.188:8080 --interval 30 --deltaTolerance 0.5 --idx 104 -d 5
 if __name__ == "__main__":

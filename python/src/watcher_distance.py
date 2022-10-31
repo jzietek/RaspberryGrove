@@ -11,19 +11,12 @@ from domoticz_api_notifier import DomoticzApiNotifier
 def run(args):
     watcher_name = os.path.basename(__file__)
     sensor = DistanceSensor(args.digitalPortUsed)
-    sensor_watcher = CyclicSensorWatcher(sensor.read_distance, args.interval, args.deltaTolerance, "m", watcher_name)
     domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
     measurement_change_printer = MeasurementChangePrinter()
+    handlers = [measurement_change_printer.print_measurement_change, domoticz_notifier.notify_distance_changed]
+    sensor_watcher = CyclicSensorWatcher(sensor.read_distance, handlers, args.interval, args.deltaTolerance, "m", watcher_name)
+    sensor_watcher.run_loop()
 
-    sensor_watcher.add_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-    sensor_watcher.add_sensor_event_subscriber(domoticz_notifier.notify_distance_changed)
-
-    try:
-        sensor_watcher.run_loop()
-    finally:
-        sensor_watcher.remove_sensor_event_subscriber(measurement_change_printer.print_measurement_change)
-        sensor_watcher.remove_sensor_event_subscriber(domoticz_notifier.notify_distance_changed)
-    pass
 
 #python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 107
 if __name__ == "__main__":
