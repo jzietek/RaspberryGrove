@@ -1,16 +1,21 @@
-class ValueChangedEvent(object):
-    def __init__(self, measurement_unit):
-        self.__eventHandlers = []
-        self.measurementUnit = measurement_unit
+class Event(object):
+    def __init__(self):
+        self._eventHandlers = []
     
     def __iadd__(self, handler):
-        self.__eventHandlers.append(handler)
+        self._eventHandlers.append(handler)
         return self
 
     def __isub__(self, handler):
-        self.__eventHandlers.remove(handler)
+        self._eventHandlers.remove(handler)
         return self
 
     def __call__(self, *args, **keywargs):
-        for event_handler in self.__eventHandlers:
+        for event_handler in self._eventHandlers:
             event_handler(*args, **keywargs)
+
+
+class ValueChangedEvent(Event):
+    def __init__(self, measurement_unit):
+        self._eventHandlers = []
+        self.measurementUnit = measurement_unit
