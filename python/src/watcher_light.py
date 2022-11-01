@@ -17,7 +17,7 @@ def run(args):
     sensor_watcher = CyclicSensorWatcher(sensor.read_light_intensity, handlers, args.interval, args.deltaTolerance, "Lux", watcher_name)    
     sensor_watcher.run_loop()
 
-#python3 watcher_light.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 106
+#python3 watcher_light.py http://192.168.0.188:8080 --interval 1 --deltaTolerance 1 --idx 106 -a 0
 if __name__ == "__main__":
     logging_setup.initialize()
     parser = WatcherArgsParser("Light measurement watcher", idx=106, analog_port=0) 

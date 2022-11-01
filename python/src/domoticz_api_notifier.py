@@ -2,11 +2,18 @@ import requests
 import logging
 
 class DomoticzApiNotifier(object):
+    """
+    Sends POST requests to the Domoticz commnad API,
+    which is documented here:
+    https://www.domoticz.com/wiki/Domoticz_API/JSON_URL
+    """
+    
     def __init__(self, domoticz_url, idx):
         self.__domoticz_url = domoticz_url
         self.__idx = idx
         self.__logger = logging.getLogger(__name__)
         self.__logger.info(f'{__name__} initialized with Domoticz URL of: {self.__domoticz_url} and IDX: {self.__idx}')
+
 
     def _post_value_changed(self, query):
         try:
@@ -17,8 +24,10 @@ class DomoticzApiNotifier(object):
         except:
             self.__logger.error(f'Exception when sending POST request: {requestQuery}')
 
+
     def notify_temperature_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
+
 
     def notify_humidity_changed(self, previous_value, current_value, delta, unit):
         status_value = 0 #normal
@@ -31,13 +40,22 @@ class DomoticzApiNotifier(object):
 
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={current_value}&svalue={status_value}')
 
+
     def notify_light_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
 
+
     def notify_distance_changed(self, previous_value, current_value, delta, unit):
-        #self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}') #TODO
+        self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
         pass
 
+
     def notify_motion_detection_changed(self, previous_value, current_value, delta, unit):
-        #self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}') #TODO
+        if current_value == 0:
+            text = "No motion"
+            level = 1
+        else:
+            level = 4
+            text = "Motion detected"
+        self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={level}&svalue={text}')
         pass

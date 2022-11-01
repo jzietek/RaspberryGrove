@@ -18,7 +18,7 @@ def run(args):
     sensor_watcher.run_loop()
 
 
-#python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 107
+#python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 107 -d 5
 if __name__ == "__main__":
     logging_setup.initialize()
     parser = WatcherArgsParser("Distance measurement watcher", idx=107, digital_port=5)

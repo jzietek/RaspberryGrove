@@ -17,7 +17,7 @@ def run(args):
     sensor_watcher = CyclicSensorWatcher(sensor.is_motion_detected, handlers, args.interval, args.deltaTolerance, "boolean", watcher_name)
     sensor_watcher.run_loop()
 
-#python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 108
+#python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 108 -d 16
 if __name__ == "__main__":
     logging_setup.initialize()
     parser = WatcherArgsParser("Motion detection watcher", idx=108, digital_port=16)
