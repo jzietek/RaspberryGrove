@@ -19,3 +19,9 @@ class ValueChangedEvent(Event):
     def __init__(self, measurement_unit):
         self._eventHandlers = []
         self.measurementUnit = measurement_unit
+
+
+class ButtonEvent(Event):
+    def __init__(self, button_index):
+        self._eventHandlers = []
+        self.button_index = button_index
