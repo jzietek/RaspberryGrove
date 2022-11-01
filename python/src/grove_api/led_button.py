@@ -27,8 +27,6 @@ class LedButton(object):
         self.button_pressed_event()
         
 
-
-
 if (__name__ == '__main__'):
     led_button = LedButton(5)
     led_button.button_pressed_event += print('button pressed handled')

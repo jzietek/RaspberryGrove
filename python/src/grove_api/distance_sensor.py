@@ -2,6 +2,10 @@ import random
 import logging
 
 class DistanceSensor(object):
+    """
+    This is an API for Grove Ultrasonic Ranger sensor:
+    https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/
+    """
     def __init__(self, digital_port_number):
         self.__logger = logging.getLogger(__name__)
         try:
@@ -14,6 +18,11 @@ class DistanceSensor(object):
 
 
     def read_distance(self):
+        """ 
+        Reads distance measurement in centimeters.
+        Operational range is 2 - 350 cm.
+        If no sensor is installed a random value will be provided.
+        """
         if (self.__sensor is not None):
             return self.__sensor.sensor.get_distance()
         else:
