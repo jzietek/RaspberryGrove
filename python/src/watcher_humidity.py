@@ -15,7 +15,7 @@ def run(args):
     sensor_watcher = CyclicSensorWatcher(sensor.read_humidity, handlers, args.interval, args.deltaTolerance, "%")    
     sensor_watcher.run_loop()
 
-#python3 watcher_humidity.py http://192.168.0.188:8080 --interval 3 --deltaTolerance 1 --idx 105
+#python3 watcher_humidity.py http://raspberrypi:8080 --interval 3 --deltaTolerance 1 --idx 105
 if __name__ == "__main__":
     parser = WatcherArgsParser("Humidity measurement watcher", idx=105, digital_port=5)
     run(parser.parse_args())

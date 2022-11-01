@@ -37,7 +37,6 @@ class DomoticzApiNotifier(object):
             status_value = 1 #comfortable
         elif (current_value > 70):
             status_value = 3 #wet
-
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={current_value}&svalue={status_value}')
 
 
@@ -47,7 +46,6 @@ class DomoticzApiNotifier(object):
 
     def notify_distance_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue=0&svalue={current_value}')
-        pass
 
 
     def notify_motion_detection_changed(self, previous_value, current_value, delta, unit):
@@ -58,4 +56,7 @@ class DomoticzApiNotifier(object):
             level = 4
             text = "Motion detected"
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={level}&svalue={text}')
-        pass
+
+    
+    def notify_moisture_changed(self, previous_value, current_value, delta, unit):
+        self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={current_value}')

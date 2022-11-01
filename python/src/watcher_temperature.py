@@ -15,7 +15,7 @@ def run(args):
     sensor_watcher = CyclicSensorWatcher(sensor.read_temperature, handlers, args.interval, args.deltaTolerance, "°C")
     sensor_watcher.run_loop()
 
-#python3 watcher_temperature.py http://192.168.0.188:8080 --interval 30 --deltaTolerance 0.5 --idx 104 -d 5
+#python3 watcher_temperature.py http://raspberrypi:8080 --interval 30 --deltaTolerance 0.5 --idx 104 -d 5
 if __name__ == "__main__":
     parser = WatcherArgsParser("Temperature measurement watcher", idx=104, digital_port=5)   
     run(parser.parse_args())

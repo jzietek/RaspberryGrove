@@ -23,7 +23,7 @@ def run(args):
     button_watcher.run_listener()
 
 
-#python3 watcher_led_button.py http://192.168.0.188:8080 --idx 110
+#python3 watcher_led_button.py http://raspberrypi:8080 --idx 110
 if __name__ == "__main__":
     logging_setup.initialize()
     parser = WatcherArgsParser("Button events watcher", idx=110, digital_port=0) 

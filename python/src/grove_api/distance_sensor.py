@@ -24,6 +24,6 @@ class DistanceSensor(object):
         If no sensor is installed a random value will be provided.
         """
         if (self.__sensor is not None):
-            return self.__sensor.sensor.get_distance()
+            return self.__sensor.get_distance()
         else:
             return random.random() * 100
