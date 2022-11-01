@@ -1,6 +1,14 @@
 import time
 import logging
-from value_changed_event import ButtonEvent
+
+from event import Event
+
+
+class ButtonEvent(Event):
+    def __init__(self, button_index):
+        self._eventHandlers = []
+        self.button_index = button_index
+
 
 class LedButton(object):
     def __init__(self, digital_port_number, button_index = 0):
