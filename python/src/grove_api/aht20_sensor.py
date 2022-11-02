@@ -21,17 +21,17 @@ class TemperatureHumiditySensor(object):
 
     def read_temperature_and_humidity(self):
         if (self.__sensor is not None):
-            humi, temp = self.__sensor.read()
+            temp, humi = self.__sensor.read()
         else:
             temp = random.randint(10, 20)
             humi = random.randint(20, 80)
         return (temp, humi)
 
     def read_temperature(self):
-        return self.__read_temperature_and_humidity()[0]
+        return self.read_temperature_and_humidity()[0]
 
     def read_humidity(self):
-        return self.__read_temperature_and_humidity()[1]
+        return self.read_temperature_and_humidity()[1]
 
 
 def test():
