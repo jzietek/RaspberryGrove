@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import logging_setup
 from domoticz_api_notifier import DomoticzApiNotifier
 from grove_api.aht20_sensor import TemperatureHumiditySensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
@@ -20,5 +21,6 @@ def run(args):
 
 #python3 watcher_temperature.py http://raspberrypi:8080 --interval 30 --deltaTolerance 0.5 --idx 104 -d 5
 if __name__ == "__main__":
+    logging_setup.initialize()
     parser = WatcherArgsParser("Temperature measurement watcher", idx=104)   
     run(parser.parse_args())

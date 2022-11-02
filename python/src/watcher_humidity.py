@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import logging_setup
 from grove_api.aht20_sensor import TemperatureHumiditySensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
 from measurement_change_printer import MeasurementChangePrinter
@@ -20,5 +21,6 @@ def run(args):
 
 #python3 watcher_humidity.py http://raspberrypi:8080 --interval 3 --deltaTolerance 1 --idx 105
 if __name__ == "__main__":
+    logging_setup.initialize()
     parser = WatcherArgsParser("Humidity measurement watcher", idx=105)
     run(parser.parse_args())
