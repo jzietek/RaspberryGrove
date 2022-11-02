@@ -29,22 +29,23 @@ class LedButton(object):
 
 
     def __handle_button_event(self, index, event, tm):
-        if event & Button.EV_SINGLE_CLICK:
-            #self.__logger.info('single click')
-            #self.__button.led.light(True)
-            self.button_pressed_event()
-        elif event & Button.EV_LONG_PRESS:
-            #self.__logger.info('long press')
-            #self.__button.led.light(False)
-            self.button_long_pressed_event()
-        elif event & Button.EV_DOUBLE_CLICK:
-            self.button_double_pressed_event()
+        if self.__button is not None:
+            if event & Button.EV_SINGLE_CLICK:
+                #self.__logger.info('single click')
+                #self.__button.led.light(True)
+                self.button_pressed_event()
+            elif event & Button.EV_LONG_PRESS:
+                #self.__logger.info('long press')
+                #self.__button.led.light(False)
+                self.button_long_pressed_event()
+            elif event & Button.EV_DOUBLE_CLICK:
+                self.button_double_pressed_event()
 
 
     def enable_light(self, isEnabled):
         if (self.__button is not None):
             self.__button.led.light(isEnabled)
-            self.__is_light_on = isEnabled
+        self.__is_light_on = isEnabled
 
 
     def is_light_on(self):
@@ -60,7 +61,6 @@ if (__name__ == '__main__'):
     led_button.button_pressed_event += print('button pressed')
     led_button.button_long_pressed_event += print('button long pressed')    
     led_button.button_double_pressed_event += print('button double pressed')
-
 
     led_button.button_long_pressed_event += led_button.toggle_ligth
 
