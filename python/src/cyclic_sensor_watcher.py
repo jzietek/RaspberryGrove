@@ -11,9 +11,11 @@ class CyclicSensorWatcher(object):
         self.__last_known_value = 0
         self.on_sensor_event = ValueChangedEvent(self.__unit)
         
-        if (watcher_name is None):
-            self.__logger = logging.getLogger()
+        if (watcher_name is not None):
+            
         else:
+            
+
             self.__logger = logging.getLogger(watcher_name)
 
         if (sensor_event_handlers is None):

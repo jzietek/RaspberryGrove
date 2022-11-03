@@ -5,7 +5,7 @@ import logging_setup
 from grove_api.motion_sensor import MotionSensor
 from cyclic_sensor_watcher import CyclicSensorWatcher
 from measurement_change_printer import MeasurementChangePrinter
-from watcher_args_parser import WatcherArgsParser
+from watcher_args_parser import CyclicWatcherArgsParser
 from domoticz_api_notifier import DomoticzApiNotifier
 
 def run(args):
@@ -20,5 +20,5 @@ def run(args):
 #python3 watcher_light.py http://raspberrypi:8080 --interval 1 --deltaTolerance 1 --idx 108 -d 16
 if __name__ == "__main__":
     logging_setup.initialize()
-    parser = WatcherArgsParser("Motion detection watcher", idx=108, digital_port=16)
+    parser = CyclicWatcherArgsParser("Motion detection watcher", idx=108, digital_port=16)
     run(parser.parse_args())

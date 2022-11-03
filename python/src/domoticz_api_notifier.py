@@ -57,6 +57,11 @@ class DomoticzApiNotifier(object):
             text = "Motion detected"
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={level}&svalue={text}')
 
-    
+
     def notify_moisture_changed(self, previous_value, current_value, delta, unit):
         self._post_value_changed(f'/json.htm?type=command&param=udevice&idx={self.__idx}&nvalue={current_value}')
+
+
+    def notify_button_pressed(self):
+        self._post_value_changed(f'/json.htm?type=command&param=switchlight&idx={self.__idx}&switchcmd=Toggle')
+    
