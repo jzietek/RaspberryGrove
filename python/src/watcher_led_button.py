@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
+
 import os
 import time
 import logging
 import logging_setup
-from grove_api.led_button import LedButton
 from watcher_args_parser import EventWatcherArgsParser
 from domoticz_api_notifier import DomoticzApiNotifier
+from grove_api.led_button import LedButton
 
 
 class ButtonWatcher(object):

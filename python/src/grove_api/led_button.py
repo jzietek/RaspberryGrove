@@ -1,7 +1,7 @@
 import time
 import logging
 
-from event import Event
+from grove_api.event import Event
 
 
 class LedButton(object):

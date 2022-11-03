@@ -9,7 +9,7 @@ class EventWatcherArgsParser(object):
         self._parser.add_argument('-d', '--digitalPortUsed', type=int, default=digital_port, help='Number of a digital port on the device, where the sensor is pluged-in.')
 
     def parse_args(self):
-        return self.__parser.parse_args()
+        return self._parser.parse_args()
 
 
 class CyclicWatcherArgsParser(EventWatcherArgsParser):
