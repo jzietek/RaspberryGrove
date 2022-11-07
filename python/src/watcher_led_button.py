@@ -20,7 +20,7 @@ class ButtonWatcher(object):
         self.__button.button_long_pressed_event += self.__handle_long_press
 
 
-    def run(self):    
+    def run_loop(self):    
         while True:
             time.sleep(1)
 
@@ -40,7 +40,9 @@ class ButtonWatcher(object):
 
 #python3 watcher_led_button.py http://raspberrypi:8080 --idx 110
 if __name__ == "__main__":
-    logging_setup.initialize('logging.yaml')
     parser = EventWatcherArgsParser("Button events watcher", idx = 110, digital_port = 5)
-    watcher = ButtonWatcher(parser.parse_args())
-    watcher.run()
+    args = parser.parse_args()
+
+    logging_setup.initialize('logging.yaml')
+    watcher = ButtonWatcher(args)
+    watcher.run_loop()
