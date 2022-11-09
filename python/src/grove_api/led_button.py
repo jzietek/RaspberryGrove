@@ -46,7 +46,11 @@ class LedButton(object):
 
     def toggle_ligth(self):
         self.enable_light(not self.is_light_on)
+
         
+    def blink(self, cycleInterval = 1.0):
+        self.__button.led.blink(cycleInterval / 2, cycleInterval / 2)
+
 
 def handle_single_click(sender: LedButton):
     print('single click')
