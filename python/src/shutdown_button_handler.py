@@ -26,16 +26,25 @@ class ShutdownButtonHandler(object):
             return False
         else:
             self.__button.blink(0.2)
-            while(self.__countdown_senconds > 0):
+            while(self.__countdown_senconds is not None and self.__countdown_senconds > 0):
                 self.__logger.info(f"Shutdown in: {self.__countdown_senconds} s")
                 self.__countdown_senconds = self.__countdown_senconds - 1
                 time.sleep(1)
-            return True
+            #Check the case when the countdown has been aborted
+            if (self.__countdown_senconds is None):
+                return False
+            else:
+                return True
 
 
     def shutdown(self):
+        self.__countdown_senconds = None
         self.__logger.info(f"Shutting down")
-        os.system("shutdown -h now")
+        try:
+            os.system("shutdown -h now")
+        except Exception as ex:
+            self.__logger.error(ex)
+        
 
 
     def run_loop(self):    
@@ -65,7 +74,7 @@ class ShutdownButtonHandler(object):
         self.__countdown_senconds = 30
 
 
-#python3 shutdown_button_handler.py -d 5
+#sudo -E python3 shutdown_button_handler.py -d 5
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Shutdown button")
     parser.add_argument('-d', '--digitalPortUsed', type=int, default=5, help='Number of a digital port on the device, where the device is pluged-in.')
