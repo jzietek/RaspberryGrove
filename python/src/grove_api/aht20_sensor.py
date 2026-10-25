@@ -1,3 +1,29 @@
+import smbus2
+
+# Monkey patch for grove.py compatibility: 
+# Maps missing .write() and .read() methods to native smbus2 I2C block operations.
+
+if not hasattr(smbus2.SMBus, 'write'):
+    def _fixed_write(self, address, data):
+        if isinstance(data, int):
+            return self.write_byte(address, data)
+        elif len(data) == 1:
+            return self.write_byte(address, data)
+        else:
+            return self.write_i2c_block_data(address, data[0], data[1:])
+    
+    smbus2.SMBus.write = _fixed_write
+
+if not hasattr(smbus2.SMBus, 'read'):
+    def _fixed_read(self, address, length):
+        # AHT20 requires reading a block of bytes after sending a measurement request
+        # Typically, we read the block from a "dummy" register 0 or directly from the address
+        return self.read_i2c_block_data(address, 0, length)
+    
+    smbus2.SMBus.read = _fixed_read
+# End of monkey patch
+
+
 import random
 from grove_api.polling_sensor import PollingSensor
 from grove_api.value_changed_event import ValueChangedEvent
@@ -18,8 +44,8 @@ class TemperatureHumiditySensor(PollingSensor):
         try:
             from grove.grove_temperature_humidity_aht20 import GroveTemperatureHumidityAHT20
             self._sensor = GroveTemperatureHumidityAHT20()
-        except ImportError:
-            self._logger.warn("Grove not supported. Using mocked temperature/humidity sensor instead.")
+        except ImportError as e:
+            self._logger.warn(f"Grove not supported. Using mocked temperature/humidity sensor instead. Error: {e}")
 
 
     def read_temperature_and_humidity(self):
