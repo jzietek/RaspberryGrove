@@ -20,6 +20,7 @@ def run():
     sensor.humidity_changed_event += domoticz_notifier.notify_humidity_changed
     sensor.run_loop()
 
-#python3 watcher_temperature_humidity.py http://raspberrypi:8080 --interval 1 --deltaTolerance 0.5 --idx 104
+#OLD: python3 watcher_temperature_humidity.py http://raspberrypi:8080 --interval 1 --deltaTolerance 0.5 --idx 104
+#NEW: python watcher_temperature_humidity.py http://malina.local:51828 --interval 1 --deltaTolerance 0.5 --idx 0
 if __name__ == "__main__":
     run()
