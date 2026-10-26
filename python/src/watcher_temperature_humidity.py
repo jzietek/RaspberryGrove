@@ -8,8 +8,8 @@ from watcher_args_parser import CyclicWatcherArgsParser
 
 def run():
     parser = CyclicWatcherArgsParser("Temperature measurement watcher", idx=104)
-    args = parser.parse_args()    
-    
+    args = parser.parse_args()
+
     logging_setup.initialize()
     domoticz_notifier = DomoticzApiNotifier(args.domoticzHost, args.idx)
     measurement_change_printer = MeasurementChangePrinter()

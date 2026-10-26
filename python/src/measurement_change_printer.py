@@ -6,4 +6,4 @@ class MeasurementChangePrinter(object):
         pass
 
     def print_measurement_change(self, previous_value, current_value, delta, unit):
-        self.__logger.info(f'Value has changed from {previous_value} to {current_value} {unit}')
+        self.__logger.info(f'Value has changed from {previous_value:.2f} to {current_value:.2f} {unit}')
